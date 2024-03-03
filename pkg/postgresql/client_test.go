@@ -11,7 +11,7 @@ func TestPostgres(t *testing.T) {
 	cfg := postgresql.Config{
 		User:     "postgres",
 		Password: "5432",
-		Host:     "postgres",
+		Host:     "localhost",
 		Port:     "5432",
 		Database: "postgres",
 	}
