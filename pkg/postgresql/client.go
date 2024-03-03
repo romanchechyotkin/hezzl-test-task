@@ -7,12 +7,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type Client struct {
-	pool *pgxpool.Pool
-}
-
-func (c *Client) CreateProject(ctx context.Context, name string) error {
-	exec, err := c.pool.Exec(ctx, "insert into projects (name) values ($1)", name)
+func CreateProject(pool *pgxpool.Pool, ctx context.Context, name string) error {
+	exec, err := pool.Exec(ctx, "insert into projects (name) values ($1)", name)
 	if err != nil {
 		return err
 	}
@@ -22,7 +18,7 @@ func (c *Client) CreateProject(ctx context.Context, name string) error {
 	return nil
 }
 
-func newClient(dsn string) *Client {
+func newClient(dsn string) *pgxpool.Pool {
 	pool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +31,5 @@ func newClient(dsn string) *Client {
 
 	log.Println("database connected")
 
-	return &Client{
-		pool: pool,
-	}
+	return pool
 }

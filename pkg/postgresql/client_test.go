@@ -20,7 +20,7 @@ func TestPostgres(t *testing.T) {
 	pgClient := postgresql.New(&cfg)
 
 	t.Run("create project success", func(t *testing.T) {
-		err := pgClient.CreateProject(context.Background(), "test 1")
+		err := postgresql.CreateProject(pgClient, context.Background(), "test 1")
 		if err != nil {
 			t.Fatal()
 		}
