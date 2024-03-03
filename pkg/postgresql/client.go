@@ -11,6 +11,17 @@ type Client struct {
 	pool *pgxpool.Pool
 }
 
+func (c *Client) CreateProject(ctx context.Context, name string) error {
+	exec, err := c.pool.Exec(ctx, "insert into projects (name) values ($1)", name)
+	if err != nil {
+		return err
+	}
+
+	log.Println("rows affected", exec.RowsAffected())
+
+	return nil
+}
+
 func newClient(dsn string) *Client {
 	pool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
