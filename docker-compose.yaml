@@ -1,6 +1,12 @@
 version: '3.7'
 
 services:
+  nats:
+    image: nats:latest
+    container_name: nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
 
   postgres:
     container_name: postgres
@@ -38,3 +44,5 @@ services:
       - ./app_clickhouse_data:/var/lib/clickhouse
     ports:
       - "8123:8123"
+    depends_on:
+      - nats
