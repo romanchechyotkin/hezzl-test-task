@@ -2,6 +2,7 @@ package postgresql_test
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/romanchechyotkin/hezzl-test-task/pkg/postgresql"
@@ -9,11 +10,11 @@ import (
 
 func TestPostgres(t *testing.T) {
 	cfg := postgresql.Config{
-		User:     "postgres",
-		Password: "5432",
-		Host:     "localhost",
-		Port:     "5432",
-		Database: "postgres",
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		Host:     os.Getenv("DB_HOST"),
+		Port:     os.Getenv("DB_PORT"),
+		Database: os.Getenv("DB_DATABASE"),
 	}
 
 	pgClient := postgresql.New(&cfg)

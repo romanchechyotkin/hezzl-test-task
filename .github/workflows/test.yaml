@@ -34,6 +34,10 @@ jobs:
 
       - name: Run tests
         env:
-          DATABASE_URL: postgres://postgres:5432@localhost:5432/postgres?sslmode=disable
+          DB_USER: postgres
+          DB_PASSWORD: 5432
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_DATABASE: postgres
         run: |
           go test -v ./...
