@@ -1,16 +1,40 @@
 package main
 
-import "github.com/romanchechyotkin/hezzl-test-task/pkg/postgresql"
+import (
+	"github.com/romanchechyotkin/hezzl-test-task/pkg/clickhouse"
+	"github.com/romanchechyotkin/hezzl-test-task/pkg/postgresql"
+	"github.com/romanchechyotkin/hezzl-test-task/pkg/redis"
+)
 
 func main() {
-	cfg := postgresql.Config {
-		User: "postgres",
+	pgCfg := postgresql.Config{
+		User:     "postgres",
 		Password: "5432",
-		Host: "localhost",
-		Port: "5432",
+		Host:     "localhost",
+		Port:     "5432",
 		Database: "hezzl",
 	}
 
-	pgClient := postgresql.New(&cfg)	
+	pgClient := postgresql.New(&pgCfg)
 	_ = pgClient
+
+	redisCfg := redis.Config{
+		Host:     "localhost",
+		Port:     "6379",
+		Password: "6379",
+		Database: 0,
+	}
+
+	redisClient := redis.NewClient(&redisCfg)
+	_ = redisClient
+
+	clickhouseCfg := clickhouse.Config{
+		Host:     "localhost",
+		Port:     "8123",
+		User:     "clickhouse",
+		Password: "8123",
+	}
+	
+	clickhouseClient := clickhouse.NewClient(&clickhouseCfg)
+	_ = clickhouseClient
 }
