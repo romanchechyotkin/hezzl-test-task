@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/romanchechyotkin/hezzl-test-task/internal/server"
 	"github.com/romanchechyotkin/hezzl-test-task/pkg/clickhouse"
 	"github.com/romanchechyotkin/hezzl-test-task/pkg/postgresql"
 	"github.com/romanchechyotkin/hezzl-test-task/pkg/redis"
@@ -16,7 +17,6 @@ func main() {
 	}
 
 	pgClient := postgresql.New(&pgCfg)
-	_ = pgClient
 
 	redisCfg := redis.Config{
 		Host:     "localhost",
@@ -26,7 +26,6 @@ func main() {
 	}
 
 	redisClient := redis.NewClient(&redisCfg)
-	_ = redisClient
 
 	clickhouseCfg := clickhouse.Config{
 		Host:     "localhost",
@@ -34,7 +33,9 @@ func main() {
 		User:     "clickhouse",
 		Password: "8123",
 	}
-	
+
 	clickhouseClient := clickhouse.NewClient(&clickhouseCfg)
-	_ = clickhouseClient
+
+	srv := server.New(pgClient, redisClient, clickhouseClient)
+	srv.Run()
 }

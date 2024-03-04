@@ -26,7 +26,7 @@ func NewClient(cfg *Config) *sql.DB {
 		log.Fatal(err)
 	}
 
-	log.Println("current database:", dbName)
+	log.Println("clickhouse current database:", dbName)
 
 	return connect
 }
