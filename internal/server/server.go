@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"strconv"
+	"sync/atomic"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -18,6 +20,8 @@ type Server struct {
 	clickhouseClient *sql.DB
 }
 
+var counter int32
+
 func New(pg *pgxpool.Pool, rc *redis.Client, cc *sql.DB) *Server {
 	srv := &Server{
 		router:           gin.Default(),
@@ -28,6 +32,19 @@ func New(pg *pgxpool.Pool, rc *redis.Client, cc *sql.DB) *Server {
 
 	srv.router.GET("/status", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "status")
+	})
+	srv.router.POST("/projects", func(ctx *gin.Context) {
+		atomic.AddInt32(&counter, 1)
+		name := "project" + strconv.Itoa(int(counter))
+		exec, err := srv.pgClient.Exec(ctx, "insert into projects (name) values ($1)", name)
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		log.Println(exec.RowsAffected())
+
+		ctx.String(http.StatusOK, name)
 	})
 
 	srv.base = &http.Server{
